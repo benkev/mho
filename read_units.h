@@ -40,8 +40,7 @@ typedef struct expr_list {
 
 /* Positional representation of measure expression */
 typedef struct meas_pow {
-    int dim[NMEAS];  /* powers of the units */
-    int mea[NMEAS];  /* 1: a measure present, 0 - absent */
+    int exp[NMEAS];  /* powers of the units */
 } meas_pow;
 
 #ifdef __cplusplus
@@ -66,7 +65,7 @@ expr_list *reduce(ast_node *a, expr_list *head);
 void treefree(ast_node *);
 
 /* Convert measurement expression from list into array of measure powers */
-void explst_to_dims(expr_list *explst, meas_pow *mpow);
+void explst_to_arr(expr_list *explst, meas_pow *mpow);
 
 /* interface to the lexer */
 /* extern int yylineno; /\* from lexer *\/ */

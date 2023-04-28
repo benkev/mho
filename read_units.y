@@ -10,8 +10,7 @@
 int yylex(void);
  
 /*
- * The positions of the measurement unit powers in dim[] and 
- * multiples or subdivisions in mul[]  are as follows:
+ * The positions of the measurement unit powers in array of exponents
  *
  * 0: length (meter,    m)
  * 1: mass	 (kilogram, kg)
@@ -27,11 +26,6 @@ int yylex(void);
  * 11: solid angle (steradian, sr)
  * 12: spectral flux density, or spectral irradiance (Jansky, Jy)
  * 
- * Array dim stores integer powers of the units in the measure expression.
- * Array mul stores integer powers of the prefix multipliers of units 
- * in the measure expression.
- *
- *
  */
  
 /* enum measure_index {i_length = 0, i_mass, i_time, i_tday, i_current, */

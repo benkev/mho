@@ -96,14 +96,14 @@ int main(void) {
      */
     int mu;
     meas_pow mpow;
-    explst_to_dims(el, &mpow);
+    explst_to_arr(el, &mpow);
 
     /* Print source and reduced expressions */
     printf("Source:\n \"%s\"\n\n", meas_exp);
     printf("Reduced to:\n");
     for (mu=0; mu<NMEAS; mu++) {
-        if (mpow.mea[mu]) {
-            printf("%s^%d", meas_tab[mu], mpow.dim[mu]);
+        if (mpow.exp[mu]) {
+            printf("%s^%d", meas_tab[mu], mpow.exp[mu]);
             if (mu < NMEAS-1) printf(" * ");
             else printf("\n");
         }
