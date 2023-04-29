@@ -8,6 +8,10 @@
 
 namespace hops 
 {
+    
+    MHO_Unit::MHO_Unit() : fStringRep("") {
+        for (int mu=0; mu<NMEAS; mu++) this->fExp[mu] = 0;
+    }
 
     MHO_Unit::MHO_Unit(const std::string& unit) : fExp{} {
         MHO_Unit::Parse(unit);
@@ -79,6 +83,13 @@ namespace hops
         return (bool *) (this->fExp == other.fExp);
     }
     
+    //
+    // Inequality operator
+    //
+    bool MHO_Unit::operator!=(const MHO_Unit& other) const {
+        return (bool *) (this->fExp != other.fExp);
+    }
+    
     //    
     // Assignment operator
     //
@@ -146,13 +157,14 @@ namespace hops
         }
         return meas_expr;
     } // ConstructString()
-
-    //
-    // =================  M A I N  ======================
-    //
-    
-
 } // namespace hops
+
+
+    
+//
+// =================  M A I N  ======================
+//
+
 using namespace hops;
 
 int main(void) {
@@ -164,20 +176,55 @@ int main(void) {
 
     char const meas_expr3[] = " A * kg *(m^-1*s^-2)^3  ";
 
-    MHO_Unit Unit0;
-    MHO_Unit Unit1(meas_expr1);
-    MHO_Unit Unit2(meas_expr2);
+    MHO_Unit unit0;
+    MHO_Unit unit1(meas_expr1);
+    MHO_Unit unit2(meas_expr2);
+    MHO_Unit unit3(meas_expr3);
 
     std::cout << "Source measure expression 1:\n";
-    std::cout << meas_expr1 << std::endl;
-    std::cout << "\nUnit1.GetUnitString():\n";
-    std::cout << Unit1.GetUnitString() << std::endl;
-    std::cout << "\nUnit0.GetUnitString():\n";
-    std::cout << Unit0.GetUnitString() << std::endl;
-    std::cout << "\nUnit2.GetUnitString():\n";
+    std::cout << meas_expr1 << std::endl << std::endl;
+
+    std::cout << "unit1.GetUnitString():\n";
+    std::cout << unit1.GetUnitString() << std::endl << std::endl;
+    
+    std::cout << "unit0.GetUnitString() -- empty expression.\n";
+    std::cout << unit0.GetUnitString() << std::endl;
+    
     std::cout << "Source measure expression 2:\n";
-    std::cout << meas_expr2 << std::endl;
-    std::cout << Unit2.GetUnitString() << std::endl;
+    std::cout << meas_expr2 << std::endl << std::endl << std::endl;
+    
+    std::cout << "unit2.GetUnitString():\n";
+    std::cout << unit2.GetUnitString() << std::endl << std::endl;
+
+    std::cout << "unit1/unit2 = " << std::endl;
+    std::cout << (unit1/unit2).GetUnitString() << std::endl << std::endl;
+    
+    std::cout << "unit2/unit1) = " << std::endl;
+    std::cout << (unit2/unit1).GetUnitString() << std::endl << std::endl;
+    
+    std::cout << "unit1*unit2 = " << std::endl;
+    std::cout << (unit1*unit2).GetUnitString() << std::endl << std::endl;
+    
+    // std::cout << "unit2 == unit3 = " << std::endl;
+    // std::cout << (unit2 == unit3) << std::endl;
+    // std::cout << "unit2 != unit3 = " << std::endl;
+    // std::cout << (unit2 != unit3) << std::endl;
+    
+    std::cout << "unit1^(-1) = " << std::endl;
+    std::cout << (unit1^(-1)).GetUnitString() << std::endl << std::endl;
+
+    unit1.Invert();
+    std::cout << "unit1.Invert(): " << std::endl;
+    std::cout << unit1.GetUnitString() << std::endl << std::endl;
+
+    unit1.RaiseToPower(-1);
+    std::cout << "unit1.RaiseToPower(-1): " << std::endl;
+    std::cout << unit1.GetUnitString() << std::endl
+              << std::endl;
+    
+    std::cout << "unit2^2 = " << std::endl;
+    std::cout << (unit2^2).GetUnitString() << std::endl << std::endl;
+    
     
     return 0;            
 }

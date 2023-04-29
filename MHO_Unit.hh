@@ -9,7 +9,7 @@ namespace hops
     class MHO_Unit 
     {
     public:
-        MHO_Unit() : fStringRep() { };
+        MHO_Unit();
         MHO_Unit(const std::string& unit);
         virtual ~MHO_Unit() { };
         
@@ -35,8 +35,9 @@ namespace hops
         //invert the unit:
         void Invert();
 
-        // equality operator
+        // equality operators
         bool operator==(const MHO_Unit& other) const;
+        bool operator!=(const MHO_Unit& other) const;
         
         //assignment operator
         MHO_Unit& operator=(const MHO_Unit& other);

@@ -83,12 +83,11 @@ newexpr(int measure, int power, expr_list *next)
 
 
 /* 
- * Reduce the abstract syntax tree (pointed by a) to the linked list 
- * (pointed by head) of elements {measure,power}
+ * Reduce the abstract syntax tree (pointed at by a) to the linked list 
+ * (pointed at by head) of elements {measure,power}
  *
  * The tree memory is freed.
  */
-
 
 expr_list *reduce_and_free(ast_node *a, expr_list *head) {
     
@@ -209,7 +208,7 @@ expr_list *reduce(ast_node *a, expr_list *head) {
             exp = newexpr(measleaf->measure, pwr, head);
         }
         else {
-            exp = reduce(nodl, head); /* ============== Recurse ========= >> */
+            exp = reduce(nodl, head); /* =============== Recurse ======== >> */
             /* Multiply powers of every list item by pwr */
             mulpwr(exp, pwr);
         }

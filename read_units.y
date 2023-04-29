@@ -74,15 +74,8 @@ exprsn:  numex YYEOF
                  YYERROR;
                }
         | symex YYEOF   { ast_node *a = $1;
-                          /* print_tree($1); */
-                          *explst = reduce($1, 0);
+                          *explst = reduce_and_free($1, 0);
                           expr_list *el1 = *explst;
-                          /* printf("Reduced to list:\n "); */
-                          /* print_list(*explst); */
-                          /* if (*explst == el1) printf("el == el1\n"); */
-                          /* if (*explst != el1) printf("el != el1\n"); */
-                          /* printf("*el=%p, el1=%p\n", *explst, el1); */
-                          /* printf("\nDone. "); */
         }
         | YYEOF         { yyerror(explst, "empty string."); YYERROR; }
 ;
