@@ -82,8 +82,111 @@ newexpr(int measure, int power, expr_list *next)
 }
 
 
-expr_list *
-reduce(ast_node *a, expr_list *head) {
+/* 
+ * Reduce the abstract syntax tree (pointed by a) to the linked list 
+ * (pointed by head) of elements {measure,power}
+ *
+ * The tree memory is freed.
+ */
+
+
+expr_list *reduce_and_free(ast_node *a, expr_list *head) {
+    
+    int pwr, meas;
+    num_leaf *numleaf;
+    meas_leaf *measleaf;
+    expr_list *exp, *expl, *expr;
+    ast_node *nodl, *nodr;
+
+    switch(a->nodetype) {
+    case '^': {
+        numleaf = (num_leaf *) a->r;
+        if (numleaf->nodetype != 'K') {
+            printf("Error: non-numeric power exponent, node type  %c\n",
+                   numleaf->nodetype);
+            return 0;
+        }
+        pwr = numleaf->number;
+
+        nodl = a->l;
+        if (nodl->nodetype == 'M') {
+            measleaf = (meas_leaf *) nodl;
+            exp = newexpr(measleaf->measure, pwr, head);
+            /* Delete left leaf */
+            free(nodl);
+        }
+        else {
+            exp = reduce_and_free(nodl, head);  /* ======= Recurse ====== >> */
+            /* Multiply powers of every list item by pwr */
+            mulpwr(exp, pwr);
+        }
+        break;
+    }
+      
+    case '*': {
+        nodl = a->l;
+        if (nodl->nodetype == 'M') {
+            measleaf = (meas_leaf *) nodl;
+            expl = newexpr(measleaf->measure, 1, head);
+            /* Delete left leaf */
+            free(nodl);
+        }
+        else
+            expl = reduce_and_free(nodl, head); /* ======= Recurse ====== >> */
+        
+        nodr = a->r;
+        if (nodr->nodetype == 'M') {
+            measleaf = (meas_leaf *) nodr;
+            expr = newexpr(measleaf->measure, 1, head);
+            /* Delete right leaf */
+            free(nodr);
+        }
+        else
+            expr = reduce_and_free(nodr, head); /* ======= Recurse ====== >> */
+
+        exp = concat(expl, expr);
+        
+        break;
+    }
+      
+    case '/': {
+        nodl = a->l;
+        if (nodl->nodetype == 'M') {
+            measleaf = (meas_leaf *) nodl;
+            expl = newexpr(measleaf->measure, 1, head);
+            /* Delete left leaf */
+            free(nodl);
+        }
+        else
+            expl = reduce_and_free(nodl, head); /* ======= Recurse ====== >> */
+        
+        nodr = a->r;
+        if (nodr->nodetype == 'M') {
+            measleaf = (meas_leaf *) nodr;
+            expr = newexpr(measleaf->measure, -1, head);
+            /* Delete right leaf */
+            free(nodr);
+        }
+        else {
+            expr = reduce_and_free(nodr, head); /* ======= Recurse ====== >> */
+            /* Multiply powers of every list item by -1 */
+            mulpwr(expr, -1);
+        }
+        exp = concat(expl, expr);
+        
+        break;
+    }
+
+    default: printf("internal error: bad node %c\n", a->nodetype);
+    }
+    
+    return exp;
+}                   /* End reduce_and_free() */
+
+
+
+expr_list *reduce(ast_node *a, expr_list *head) {
+    
     int pwr, meas;
     num_leaf *numleaf;
     meas_leaf *measleaf;
@@ -106,7 +209,7 @@ reduce(ast_node *a, expr_list *head) {
             exp = newexpr(measleaf->measure, pwr, head);
         }
         else {
-            exp = reduce(nodl, head);
+            exp = reduce(nodl, head); /* ============== Recurse ========= >> */
             /* Multiply powers of every list item by pwr */
             mulpwr(exp, pwr);
         }
@@ -120,7 +223,7 @@ reduce(ast_node *a, expr_list *head) {
             expl = newexpr(measleaf->measure, 1, head);
         }
         else
-            expl = reduce(nodl, head);
+            expl = reduce(nodl, head); /* ============== Recurse ======== >> */
         
         nodr = a->r;
         if (nodr->nodetype == 'M') {
@@ -128,7 +231,7 @@ reduce(ast_node *a, expr_list *head) {
             expr = newexpr(measleaf->measure, 1, head);
         }
         else
-            expr = reduce(nodr, head);
+            expr = reduce(nodr, head); /* ============== Recurse ======== >> */
 
         exp = concat(expl, expr);
         
@@ -142,7 +245,7 @@ reduce(ast_node *a, expr_list *head) {
             expl = newexpr(measleaf->measure, 1, head);
         }
         else
-            expl = reduce(nodl, head);
+            expl = reduce(nodl, head); /* ============== Recurse ======== >> */
         
         nodr = a->r;
         if (nodr->nodetype == 'M') {
@@ -150,7 +253,7 @@ reduce(ast_node *a, expr_list *head) {
             expr = newexpr(measleaf->measure, -1, head);
         }
         else {
-            expr = reduce(nodr, head);
+            expr = reduce(nodr, head); /* ============== Recurse ======== >> */
             /* Multiply powers of every list item by -1 */
             mulpwr(expr, -1);
         }
@@ -163,7 +266,8 @@ reduce(ast_node *a, expr_list *head) {
     }
     
     return exp;
-}
+}                    /* End reduce() */
+
 
 
 void
@@ -231,7 +335,6 @@ int getmeas(char const *sym) {
         if (streq == 0) break;
     }
     if (streq == 0) {
-        printf("\n'%s': i=%d\n", sym, i);
         return  i;
     }
     else
@@ -286,7 +389,6 @@ void yyerror(expr_list **explst, const char *s, ...)
   va_list ap;
   va_start(ap, s);
 
-  /* fprintf(stderr, "%d: error: ", yylineno); */
   fprintf(stderr, "Error: ");
   vfprintf(stderr, s, ap);
   fprintf(stderr, "\n");

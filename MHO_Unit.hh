@@ -1,7 +1,7 @@
 #include <string>
 #include <array>
+#include "read_units.h"
 
-#define NMEAS 12
 
 namespace hops 
 {
