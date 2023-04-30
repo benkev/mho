@@ -184,6 +184,11 @@ expr_list *reduce_and_free(ast_node *a, expr_list *head) {
 
 
 
+/* 
+ * Reduce the abstract syntax tree (pointed at by a) to the linked list 
+ * (pointed at by head) of elements {measure,power}
+ *
+ */
 expr_list *reduce(ast_node *a, expr_list *head) {
     
     int pwr, meas;
@@ -353,6 +358,20 @@ void print_list(expr_list *const expr) {
 }
 
 
+/* ------------------------------------------------------------------------ */
+
+void free_list(expr_list *expr) {
+    
+    expr_list *ep_next, *ep = expr;
+    int mu;
+    while (ep) {        
+        ep_next = ep->next;
+        free(ep);
+        ep = ep_next;
+    }
+}
+
+
 void print_tree(ast_node *a) {
 
     switch(a->nodetype) {
@@ -413,3 +432,27 @@ void explst_to_arr(expr_list *explst, meas_pow *mpow) {
         ep = ep->next;
     }
 }
+
+
+/*
+ * Convert measurement expression from list form into array of measure powers.
+ * Free the list.
+ */
+void explst_to_arr_and_free(expr_list *explst, meas_pow *mpow) {
+
+    expr_list *ep_next, *ep = explst;
+    int mu, pw;
+
+    for (mu=0; mu<NMEAS; mu++) mpow->exp[mu] = 0;
+
+    while (ep) {
+        mu = ep->measure; /* Position in the array of measure powers */
+        pw = ep->power;
+        mpow->exp[mu] += pw;
+        
+        ep_next = ep->next;
+        free(ep);
+        ep = ep_next;
+    }
+}
+

@@ -64,14 +64,20 @@ expr_list *reduce(ast_node *a, expr_list *head);
 /* Reduce an AST into a linked list and free tree node memory */
 expr_list *reduce_and_free(ast_node *a, expr_list *head);
 
-/* delete and free an AST */
+/* Delete and free an AST */
 void treefree(ast_node *);
+
+/* Delete and free a measure expression list */
+void free_list(expr_list *);
 
 /* Convert measurement expression from list into array of measure powers */
 void explst_to_arr(expr_list *explst, meas_pow *mpow);
 
+/* Convert measurement expression from list form into array of measure powers.
+ * Free the list. */
+void explst_to_arr_and_free(expr_list *explst, meas_pow *mpow);
+    
 /* interface to the lexer */
-/* extern int yylineno; /\* from lexer *\/ */
 void yyerror(expr_list **el, const char *s, ...);
 
 #ifdef __cplusplus

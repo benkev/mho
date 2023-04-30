@@ -111,25 +111,18 @@ namespace hops
         int mu, perr;
 
         buf = yy_scan_string(meas_exp);
-        perr = yyparse(&el);
-        if (perr == 0) { 
-            explst_to_arr(el, &mpow);
-            yy_delete_buffer(buf);
-
-            // /* Print source and reduced expressions */
-            // printf("Source:\n \"%s\"\n\n", meas_exp);
-            // printf("Reduced to:\n");
-            // for (mu=0; mu<NMEAS; mu++) {
-            //     if (mpow.exp[mu]) {
-            //         printf("%s^%d", meas_tab[mu], mpow.exp[mu]);
-            //         if (mu < NMEAS-1) printf(" * ");
-            //         else printf("\n");
-            //     }
-            // }
         
+        perr = yyparse(&el);  /* Sets el to point at the linked list */
+
+        if (perr == 0) {
+            // Convert list of measures to array of their powers
+            explst_to_arr_and_free(el, &mpow); 
             for (mu=0; mu<NMEAS; mu++) fExp[mu] = mpow.exp[mu];
         }
-    } // void MHO_Unit::Parse(const std::string& repl)
+        
+        yy_delete_buffer(buf);
+        
+    }       // End MHO_Unit::Parse(const std::string& repl)
 
     //
     // Construct a human-readable string from the base unit exponents

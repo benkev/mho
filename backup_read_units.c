@@ -4,12 +4,6 @@
 #include "read_units.lex.h"
 #include "read_units.tab.h"
 
-/*
- * Table of measurement units
- */
-/* char const *const meas_tab[NMEAS] = \ */
-/*  {"m", "kg", "s", "A", "K", "cd", "mol", "Hz", "rad", "deg", "sr", "Jy"}; */
-
 
 
 int main(void) {
