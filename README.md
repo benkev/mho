@@ -52,9 +52,9 @@ Each one has fixed position from 0 to 11. In MHO_Unit class any EMU is
 represented as an int array of length 12 containing the exponents of the units.
 
 EMUs in humam-readable strings are algebraic expressions, so they need to be
-parsed. The parser repeatedly calls the lexer for the next lexema and checks if
-the sequence of lexemas matches the specified syntactic rules. In our case, the
-lexemas are "kg", or "*", or "(", etc.  During this process, every matching of
+parsed. The parser repeatedly calls the lexer for the next lexeme and checks if
+the sequence of lexemes matches the specified syntactic rules. In our case, the
+lexemes are "kg", or "*", or "(", etc.  During this process, every matching of
 the syntax rule makes the parser add to AST, the abstract syntax tree of the
 expression. When it finishes, we have a link to AST containing all the units and
 links between them in the source expression.
