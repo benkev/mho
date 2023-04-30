@@ -26,6 +26,10 @@ and see the result:
     std::cout << F.GetUnitString() << std::endl;
 --> m * s^-2 
 
+The class also defines the logical operations: equality "==" and inequality "!=".
+operations are also defined
+
 Many more test examples are in the file MHO_Unit.cc, in main().
 
-This class would also have a interface to conversion to and from human readable strings. We may also eventually need a way of including SI pre-factors (kilo, Mega, etc.) but for the initial first attempt that can be avoided.
+Eventually, we may include SI prefixes, like kilo, Mega, etc.
+
