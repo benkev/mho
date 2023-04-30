@@ -6,6 +6,9 @@ ru:	read_units.y read_units.l read_units_funcs.c read_units.h \
 		MHO_Unit.cc -lm -o units
 
 clean:
+	rm -f read_units.tab.h read_units.tab.c read_units.lex.h read_units.lex.c
+
+purge:
 	rm -f read_units.tab.h read_units.tab.c read_units.lex.h read_units.lex.c \
 		units
 

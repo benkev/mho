@@ -245,9 +245,13 @@ int main(void) {
     std::cout << "E/F = s: (E / F).GetUnitString():" << std::endl;
     std::cout << (E / F).GetUnitString() << std::endl << std::endl;
 
-    u0 = mass*acc;
-    std::cout << "F = m*a: (mass * acc).GetUnitString():" << std::endl;
+    u0 = mass*acc; // u0 is F = m * a.
+    std::cout << "F = m*a; : (mass * acc).GetUnitString():" << std::endl;
     std::cout << u0.GetUnitString() << std::endl << std::endl;
+
+    F ^= -3;
+    std::cout << "F ^= -3;  : F.GetUnitString():" << std::endl;
+    std::cout << F.GetUnitString() << std::endl << std::endl;
 
     
     
