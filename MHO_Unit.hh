@@ -31,6 +31,7 @@ namespace hops
         
         // Yet another raise the unit to an integer power: unit^power
         MHO_Unit operator^(int power);
+        MHO_Unit operator^=(int power);
 
         //invert the unit:
         void Invert();

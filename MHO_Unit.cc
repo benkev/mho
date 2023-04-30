@@ -59,14 +59,22 @@ namespace hops
     
     //  
     // Yet another raise the unit to an integer power: unit^power
+    // with its compound counterpart
     //
     MHO_Unit MHO_Unit::operator^(int power) {
         MHO_Unit unit;
         for (int mu=0; mu<NMEAS; mu++)
-            unit.fExp[mu] = power*this->fExp[mu];
+            unit.fExp[mu] = power * this->fExp[mu];
         return unit;        
     }
-    
+
+    MHO_Unit MHO_Unit::operator^=(int power) {
+        for (int mu=0; mu<NMEAS; mu++)
+            this->fExp[mu] *= power;
+        return *this;        
+    }
+
+
 
     //
     // Invert the unit:
