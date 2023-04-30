@@ -10,21 +10,16 @@ hops-git/source/cpp_src/Utilities/src/MHO_Unit.cc
 
 An objects of MHO_Unit class holds an expression of measurement units (let us
 denote it as EMU or just emu). For example, define:
-
     MHO_Unit a("m/s^2");
     MHO_Unit m("kg");
     MHO_Unit F(); // Empty expression
-
 The class defines algebraic operations "*" and "/" between the emus, as well as
 exponentiation operation with an integer exponent "^". We can write:
-
-    F = m*a;
-    
+    F = m*a;   
 and see the result:
-
     std::cout << F.GetUnitString() << std::endl;
 --> m * s^-2 
 
-Many more test examples are in the file MHO_Unit.cc, in main() function.
+Many more test examples are in the file MHO_Unit.cc, in the main() function.
 
 This class would also have a interface to conversion to and from human readable strings. We may also eventually need a way of including SI pre-factors (kilo, Mega, etc.) but for the initial first attempt that can be avoided.
