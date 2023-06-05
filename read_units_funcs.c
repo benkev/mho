@@ -97,6 +97,23 @@ expr_list *reduce_and_free(ast_node *a, expr_list *head) {
     expr_list *exp, *expl, *expr;
     ast_node *nodl, *nodr;
 
+    /*
+     * If the measure expression consists of just a measurement unit 
+     * without operators, no need for the recursive tree reduction.
+     * The AST tree has the only leaf.
+     * 
+     */
+    if (a->nodetype == 'M') {
+        measleaf = (meas_leaf *) a;
+        exp = newexpr(measleaf->measure, 1, head);
+        /* Delete the one-leaf tree */
+        free(a);
+        return exp;
+    }
+    
+    /* 
+     * Dive into recursion 
+     */
     switch(a->nodetype) {
     case '^': {
         numleaf = (num_leaf *) a->r;
@@ -176,7 +193,8 @@ expr_list *reduce_and_free(ast_node *a, expr_list *head) {
         break;
     }
 
-    default: printf("internal error: bad node %c\n", a->nodetype);
+    default: printf("reduce_and_free(): internal error: bad node '%c'\n",
+                    a->nodetype);
     }
     
     return exp;
@@ -197,6 +215,23 @@ expr_list *reduce(ast_node *a, expr_list *head) {
     expr_list *exp, *expl, *expr;
     ast_node *nodl, *nodr;
 
+    /*
+     * If the measure expression consists of just a measurement unit 
+     * without operators, no need for the recursive tree reduction.
+     * The AST tree has the only leaf.
+     * 
+     */
+    if (a->nodetype == 'M') {
+        measleaf = (meas_leaf *) a;
+        exp = newexpr(measleaf->measure, 1, head);
+        /* Delete the one-leaf tree */
+        free(a);
+        return exp;
+    }
+    
+    /* 
+     * Dive into recursion 
+     */
     switch(a->nodetype) {
     case '^': {
         numleaf = (num_leaf *) a->r;
@@ -266,7 +301,7 @@ expr_list *reduce(ast_node *a, expr_list *head) {
         break;
     }
 
-    default: printf("internal error: bad node %c\n", a->nodetype);
+    default: printf("reduce(): internal error: bad node '%c'\n", a->nodetype);
     }
     
     return exp;
@@ -294,7 +329,8 @@ treefree(ast_node *a)
     free(a);
     break;
 
-  default: printf("internal error: free bad node %c\n", a->nodetype);
+  default: printf("treefree(): internal error: free bad node '%c'\n",
+                  a->nodetype);
   }
 }
 
@@ -396,7 +432,8 @@ void print_tree(ast_node *a) {
         printf("'%s'\n", meas_tab[mu]);
         break;
     }
-    default: printf("internal error: free bad node %c\n", a->nodetype);
+    default: printf("print_tree(): internal error: free bad node '%c'\n",
+                    a->nodetype);
     }
     return;
 }

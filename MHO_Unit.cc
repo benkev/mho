@@ -18,7 +18,7 @@ namespace hops
     }
     
     //
-    // Operator overloads for multiplication and division
+    // Operator overloads for multiplication, division, and exponentiation
     //
     MHO_Unit MHO_Unit::operator*(const MHO_Unit& other) const {
         MHO_Unit unit;
@@ -34,6 +34,28 @@ namespace hops
         return unit;
     }
 
+    //
+    // Operator overloads for multiplication by a string literal
+    //
+    // <unit> * <str>: class method
+    //
+    MHO_Unit MHO_Unit::operator*(const std::string& other) const {
+        MHO_Unit unit;
+        MHO_Unit other_unit(other);
+        for (int mu=0; mu<NMEAS; mu++)
+            unit.fExp[mu] = this->fExp[mu] + other_unit.fExp[mu];
+        return unit;
+    }
+    
+    // <str> * <unit>: friend function
+    MHO_Unit operator*(const std::string& lhs, const MHO_Unit& rhs) {
+        MHO_Unit unit;
+        MHO_Unit lhs_unit(lhs);
+        for (int mu=0; mu<NMEAS; mu++)
+            unit.fExp[mu] = lhs_unit.fExp[mu] + rhs.fExp[mu];
+        return unit;
+    }
+        
     //
     // Operator overloads for compound assignment
     //
@@ -132,6 +154,7 @@ namespace hops
         
     }       // End MHO_Unit::Parse(const std::string& repl)
 
+    
     //
     // Construct a human-readable string from the base unit exponents
     //
@@ -179,21 +202,39 @@ int main(void) {
     char const force_expr[] = "kg*m/s^2";
     char const energy_expr[] = "kg*m^2/s^2";
     
-    char const meas_expr1[] = "m*((kg^2*s^-3/A)^-5*K^5/cd/" \
-        "(mol*Hz)^3*s)^2*rad*Jy^(7+2*(4-6))";
+    char const meas_expr1[] = "m * ((kg^2*s^-3/A)^-5 * K^5/cd/" \
+        "(mol*Hz)^3*s)^2 * rad * Jy^(7 + 2*(4 - 6))";
     
     char const meas_expr2[] = " A*kg*(m^-1*s^-2)^3";
 
     char const meas_expr3[] = " A * kg *(m^-1*s^-2)^3  ";
 
+    printf("MHO_Unit Declarations:\n");
+    printf("\nMHO_Unit acc: '%s'\n", accel_expr);
     MHO_Unit acc(accel_expr);
+    
+    printf("\nMHO_Unit F: '%s'\n", force_expr);
     MHO_Unit F(force_expr);
+    
+    printf("\nMHO_Unit E: '%s'\n", energy_expr);
     MHO_Unit E;                E.SetUnitString(energy_expr);
+    
+    printf("\nMHO_Unit mass: '%s'\n", "kg");
     MHO_Unit mass;          mass.SetUnitString("kg");
+
     MHO_Unit u0;
+    
+    printf("\nMHO_Unit u1: '%s'\n", meas_expr1);
     MHO_Unit u1(meas_expr1);
+    
+    printf("\nMHO_Unit u2: '%s'\n", meas_expr2);
     MHO_Unit u2(meas_expr2);
+
+    printf("\nMHO_Unit u3: '%s'\n", meas_expr3);
     MHO_Unit u3(meas_expr3);
+    
+    printf("\nMHO_Unit u4: '%s'\n", meas_expr2);
+    MHO_Unit u4(meas_expr2);
     
 
     std::cout << "Source measure expression 1:\n";
@@ -252,6 +293,28 @@ int main(void) {
     F ^= -3;
     std::cout << "F ^= -3;  : F.GetUnitString():" << std::endl;
     std::cout << F.GetUnitString() << std::endl << std::endl;
+
+    u0 = u4 * "kg^-1 * (m^-1 * s^-2)^(-3) / m^2";
+    std::cout << "u4 = ";
+    std::cout << u4.GetUnitString() << std::endl;
+    std::cout << "u0 = u4 * \"kg^-1 * (m^-1 * s^-2)^(-3) / m^2\";" << std::endl;
+    std::cout << "u0 = ";
+    std::cout << u0.GetUnitString() << std::endl << std::endl;
+
+    u0 = "kg" * acc; // u0 is F = m * a.
+    std::cout << "acc = ";
+    std::cout << acc.GetUnitString() << std::endl;
+    std::cout << "u0 = \"kg\" * acc = ";
+    std::cout << u0.GetUnitString() << std::endl << std::endl;
+
+   
+    u0 = mass * "m/s^2"; // u0 is F = m * a.acc
+    std::cout << "mass = ";
+    std::cout << mass.GetUnitString() << std::endl;
+    std::cout << "u0 = mass * \"m/s^2\" = ";
+    std::cout << u0.GetUnitString() << std::endl << std::endl;
+
+   
 
     
     

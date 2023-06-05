@@ -17,10 +17,20 @@ namespace hops
         void SetUnitString(const std::string unit) { Parse(unit); };
         std::string GetUnitString() const { return ConstructString(); }
 
+        //setter and getter for the unit exponrnts
+        void SetUnitExp(const std::array<int, NMEAS> fExp);
+        std::array<int, NMEAS> GetUnitExp() const { return fExp; }
+
 
         // operator overloads for multiplication and division
         MHO_Unit operator*(const MHO_Unit& other) const;
         MHO_Unit operator/(const MHO_Unit& other) const;
+        
+        //
+        // Operator overloads for multiplication by a string literal
+        //
+        MHO_Unit operator*(const std::string& other) const;
+        friend MHO_Unit operator*(const std::string& lhs, const MHO_Unit& rhs);
         
         // operator overloads for compound assignment
         MHO_Unit& operator*=(const MHO_Unit& other);
@@ -57,5 +67,6 @@ namespace hops
         virtual void Parse(const std::string& repl); 
 
     };
+
 
 }
