@@ -1,4 +1,4 @@
-ru:	read_units.y read_units.l read_units_funcs.c read_units.h \
+units:	read_units.y read_units.l read_units_funcs.c read_units.h \
 	MHO_Unit.cc MHO_Unit.hh
 	bison -dt read_units.y
 	flex -o read_units.lex.c read_units.l

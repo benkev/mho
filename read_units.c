@@ -77,11 +77,11 @@ int main(void) {
     printf("\n");
     
     expr_list *el1 = el;
-    printf("el=%p, el1=%p\n", el, el1);
+
     print_list(el);
-    if (el == el1) printf("el == el1\n");
-    if (el != el1) printf("el != el1\n");
-    printf("el=%p, el1=%p\n", el, el1);
+    /* if (el == el1) printf("el == el1\n"); */
+    /* if (el != el1) printf("el != el1\n"); */
+    /* printf("el=%p, el1=%p\n", el, el1); */
 
     //print_list(el);
 
