@@ -36,6 +36,16 @@ namespace hops
         // <str> * <unit>: friend function        
         friend MHO_Unit operator*(const std::string& lhs, const MHO_Unit& rhs);
         
+        //
+        // Operator overloads for division by a string literal
+        //
+        // <unit> / <str>: class method
+        MHO_Unit operator/(const std::string& other) const;
+        // <unit> /= <str>: class method (Compound assgnt)
+        MHO_Unit& operator/=(const std::string& other);
+        // <str> / <unit>: friend function        
+        friend MHO_Unit operator/(const std::string& lhs, const MHO_Unit& rhs);
+        
         // operator overloads for compound assignment
         MHO_Unit& operator*=(const MHO_Unit& other);
         MHO_Unit& operator/=(const MHO_Unit& other);

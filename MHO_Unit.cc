@@ -55,13 +55,42 @@ namespace hops
         return *this;
     }
     
-
     // <str> * <unit>: friend function
     MHO_Unit operator*(const std::string& lhs, const MHO_Unit& rhs) {
         MHO_Unit unit;
         MHO_Unit lhs_unit(lhs);
         for (int mu=0; mu<NMEAS; mu++)
             unit.fExp[mu] = lhs_unit.fExp[mu] + rhs.fExp[mu];
+        return unit;
+    }
+        
+    //
+    // Operator overloads for division by a string literal
+    //
+    // <unit> / <str>: class method
+    //
+    MHO_Unit MHO_Unit::operator/(const std::string& other) const {
+        MHO_Unit unit;
+        MHO_Unit other_unit(other);
+        for (int mu=0; mu<NMEAS; mu++)
+            unit.fExp[mu] = this->fExp[mu] - other_unit.fExp[mu];
+        return unit;
+    }
+    
+    // <unit> /= <str>: class method (Compound assgnt)
+    MHO_Unit& MHO_Unit::operator/=(const std::string& other) {
+        MHO_Unit other_unit(other);
+        for (int mu=0; mu<NMEAS; mu++)
+            this->fExp[mu] -= other_unit.fExp[mu];
+        return *this;
+    }
+
+    // <str> / <unit>: friend function
+    MHO_Unit operator/(const std::string& lhs, const MHO_Unit& rhs) {
+        MHO_Unit unit;
+        MHO_Unit lhs_unit(lhs);
+        for (int mu=0; mu<NMEAS; mu++)
+            unit.fExp[mu] = lhs_unit.fExp[mu] - rhs.fExp[mu];
         return unit;
     }
         
@@ -333,9 +362,20 @@ int main(void) {
     std::cout << "u0 = mass * \"m/s^2\" = ";
     std::cout << u0.GetUnitString() << std::endl << std::endl;
 
-   
+    u0 = u4 / "kg * (m^-1 * s^-2)^3 * m^2";
+    std::cout << "u4 = ";
+    std::cout << u4.GetUnitString() << std::endl;
+    std::cout << "u0 = u4 / \"kg * (m^-1 * s^-2)^3 * m^2\";" << std::endl;
+    std::cout << "u0 = ";
+    std::cout << u0.GetUnitString() << std::endl << std::endl;
 
-    
+    u0 = "kg * (m^-1 * s^-2)^3" / acc;
+    std::cout << "acc = ";
+    std::cout << acc.GetUnitString() << std::endl;
+    std::cout << "u0 = ""kg * (m^-1 * s^-2)^3"" / acc;" << std::endl;
+    std::cout << "u0 = ";
+    std::cout << u0.GetUnitString() << std::endl << std::endl;
+
     
     return 0;            
 }
