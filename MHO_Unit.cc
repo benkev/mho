@@ -47,6 +47,15 @@ namespace hops
         return unit;
     }
     
+    // <unit> *= <str>: class method (Compound assgnt)
+    MHO_Unit& MHO_Unit::operator*=(const std::string& other) {
+        MHO_Unit other_unit(other);
+        for (int mu=0; mu<NMEAS; mu++)
+            this->fExp[mu] += other_unit.fExp[mu];
+        return *this;
+    }
+    
+
     // <str> * <unit>: friend function
     MHO_Unit operator*(const std::string& lhs, const MHO_Unit& rhs) {
         MHO_Unit unit;
@@ -242,6 +251,11 @@ int main(void) {
 
     std::cout << "MHO_Unit u1(meas_expr1); u1.GetUnitString():\n";
     std::cout << u1.GetUnitString() << std::endl << std::endl;
+    std::cout << "u1 exponents: ";
+    std::array<int, NMEAS> aex = u1.GetUnitExp();
+    for (int mu=0; mu<NMEAS; mu++)
+        std::cout << aex[mu] << " ";
+    std::cout << std::endl << std::endl;
     
     std::cout << "u0.GetUnitString() -- empty expression.\n";
     std::cout << u0.GetUnitString() << std::endl;
@@ -305,7 +319,12 @@ int main(void) {
     std::cout << "acc = ";
     std::cout << acc.GetUnitString() << std::endl;
     std::cout << "u0 = \"kg\" * acc = ";
-    std::cout << u0.GetUnitString() << std::endl << std::endl;
+    std::cout << u0.GetUnitString() << std::endl;
+    std::cout << "u0 exponents: ";
+    aex = u0.GetUnitExp();
+    for (int mu=0; mu<NMEAS; mu++)
+        std::cout << aex[mu] << " ";
+    std::cout << std::endl << std::endl;
 
    
     u0 = mass * "m/s^2"; // u0 is F = m * a.acc
